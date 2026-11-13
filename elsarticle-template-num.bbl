@@ -1,0 +1,285 @@
+\begin{thebibliography}{53}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Inproceedings
+\bibitem[{Bacon et~al.(2017)Bacon, Harb \& Precup}]{bacon2017option}
+\bibinfo{author}{Bacon, P.-L.}, \bibinfo{author}{Harb, J.}, \& \bibinfo{author}{Precup, D.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{The option-critic architecture}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 31st AAAI Conference on Artificial Intelligence}\/} (pp. \bibinfo{pages}{1726--1734}).
+%Type = Article
+\bibitem[{Bai et~al.(2020)Bai, Xiao, Wang, Sun \& Feng}]{bai2020multi}
+\bibinfo{author}{Bai, B.}, \bibinfo{author}{Xiao, Z.}, \bibinfo{author}{Wang, Q.}, \bibinfo{author}{Sun, P.}, \& \bibinfo{author}{Feng, X.} (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Multi-objective trajectory optimization for freight trains based on quadratic programming}.
+\newblock {\it \bibinfo{journal}{Transportation Research Record}\/},  {\it \bibinfo{volume}{2674}\/}, \bibinfo{pages}{466--477}. \DOIprefix\doi{10.1177/0361198120937307}.
+%Type = Article
+\bibitem[{Barto \& Mahadevan(2003)}]{barto2003recent}
+\bibinfo{author}{Barto, A.~G.}, \& \bibinfo{author}{Mahadevan, S.} (\bibinfo{year}{2003}).
+\newblock \bibinfo{title}{Recent advances in hierarchical reinforcement learning}.
+\newblock {\it \bibinfo{journal}{Discrete Event Dynamic Systems}\/},  {\it \bibinfo{volume}{13}\/}, \bibinfo{pages}{341--379}.
+%Type = Article
+\bibitem[{Berger(2002)}]{berger2002friction}
+\bibinfo{author}{Berger, E.} (\bibinfo{year}{2002}).
+\newblock \bibinfo{title}{Friction modeling for dynamic system simulation}.
+\newblock {\it \bibinfo{journal}{Appl. Mech. Rev.}\/},  {\it \bibinfo{volume}{55}\/}, \bibinfo{pages}{535--577}.
+%Type = Article
+\bibitem[{Chen et~al.(2023)Chen, Guo, Meng, Xu, Li \& Li}]{chen2023research}
+\bibinfo{author}{Chen, X.}, \bibinfo{author}{Guo, X.}, \bibinfo{author}{Meng, J.}, \bibinfo{author}{Xu, R.}, \bibinfo{author}{Li, S.}, \& \bibinfo{author}{Li, D.} (\bibinfo{year}{2023}).
+\newblock \bibinfo{title}{Research on ato control method for urban rail based on deep reinforcement learning}.
+\newblock {\it \bibinfo{journal}{IEEE Access}\/},  {\it \bibinfo{volume}{11}\/}, \bibinfo{pages}{5919--5928}.
+%Type = Article
+\bibitem[{Cheng et~al.(2024)Cheng, Cao, Yang, Wang \& Zhou}]{cheng2024train}
+\bibinfo{author}{Cheng, L.}, \bibinfo{author}{Cao, J.}, \bibinfo{author}{Yang, X.}, \bibinfo{author}{Wang, W.}, \& \bibinfo{author}{Zhou, Z.} (\bibinfo{year}{2024}).
+\newblock \bibinfo{title}{A train trajectory optimization method based on the safety reinforcement learning with a relaxed dynamic reward}.
+\newblock {\it \bibinfo{journal}{Discover Applied Sciences}\/},  {\it \bibinfo{volume}{6}\/}, \bibinfo{pages}{469}.
+%Type = Article
+\bibitem[{Christodoulou(2019)}]{christodoulou2019soft}
+\bibinfo{author}{Christodoulou, P.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{Soft actor-critic for discrete action settings}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:1910.07207}\/}, .
+%Type = Article
+\bibitem[{Cole et~al.(2006)}]{cole2006longitudinal}
+\bibinfo{author}{Cole, C.} et~al. (\bibinfo{year}{2006}).
+\newblock \bibinfo{title}{Longitudinal train dynamics}.
+\newblock {\it \bibinfo{journal}{Handbook of railway vehicle dynamics}\/},  (pp. \bibinfo{pages}{239--278}).
+%Type = Inproceedings
+\bibitem[{Dayan \& Hinton(1993)}]{dayan1993feudal}
+\bibinfo{author}{Dayan, P.}, \& \bibinfo{author}{Hinton, G.~E.} (\bibinfo{year}{1993}).
+\newblock \bibinfo{title}{Feudal reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{Advances in Neural Information Processing Systems 5}\/} (pp. \bibinfo{pages}{271--278}).
+%Type = Misc
+\bibitem[{Delalleau et~al.(2019)Delalleau, Peter, Alonso \& Logut}]{delalleau2019discretecontinuousactionrepresentation}
+\bibinfo{author}{Delalleau, O.}, \bibinfo{author}{Peter, M.}, \bibinfo{author}{Alonso, E.}, \& \bibinfo{author}{Logut, A.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{Discrete and continuous action representation for practical rl in video games}.
+\newblock \URLprefix \url{https://arxiv.org/abs/1912.11077}. \href{http://arxiv.org/abs/1912.11077}{\tt arXiv:1912.11077}.
+%Type = Article
+\bibitem[{Dietterich(2000)}]{dietterich2000hierarchical}
+\bibinfo{author}{Dietterich, T.~G.} (\bibinfo{year}{2000}).
+\newblock \bibinfo{title}{Hierarchical reinforcement learning with the {MAXQ} value function decomposition}.
+\newblock {\it \bibinfo{journal}{Journal of Artificial Intelligence Research}\/},  {\it \bibinfo{volume}{13}\/}, \bibinfo{pages}{227--303}.
+%Type = Article
+\bibitem[{Eckert et~al.(2025)Eckert, Pavani~Teodoro, Valente~Lopes, Wu \& Santos}]{eckert2025multi}
+\bibinfo{author}{Eckert, J.~J.}, \bibinfo{author}{Pavani~Teodoro, {\'I}.}, \bibinfo{author}{Valente~Lopes, M.}, \bibinfo{author}{Wu, Q.}, \& \bibinfo{author}{Santos, A.~A.} (\bibinfo{year}{2025}).
+\newblock \bibinfo{title}{Multi-objective optimization of electro-pneumatic braking process with fuzzy logic control for heavy haul railway applications}.
+\newblock {\it \bibinfo{journal}{International Journal of Rail Transportation}\/},  {\it \bibinfo{volume}{13}\/}, \bibinfo{pages}{332--351}.
+%Type = Article
+\bibitem[{Eckert et~al.(2019)Eckert, Ramos, de~Oliveira~Junior, da~Silva~Martins \& Kurka}]{eckert2019dissipated}
+\bibinfo{author}{Eckert, J.~J.}, \bibinfo{author}{Ramos, P.~G.}, \bibinfo{author}{de~Oliveira~Junior, A. J.~S.}, \bibinfo{author}{da~Silva~Martins, T.}, \& \bibinfo{author}{Kurka, P. R.~G.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{A dissipated energy model of shock evolution in the simulation of the dynamics of dgm’s of railway compositions}.
+\newblock {\it \bibinfo{journal}{Mechanism and Machine Theory}\/},  {\it \bibinfo{volume}{134}\/}, \bibinfo{pages}{365--375}. \DOIprefix\doi{10.1016/j.mechmachtheory.2018.12.034}.
+%Type = Article
+\bibitem[{Eckert et~al.(2023)Eckert, Teodoro, Teixeira, Martins, Kurka \& Santos}]{eckert2023fast}
+\bibinfo{author}{Eckert, J.~J.}, \bibinfo{author}{Teodoro, {\'I}.~P.}, \bibinfo{author}{Teixeira, L.~H.}, \bibinfo{author}{Martins, T.~S.}, \bibinfo{author}{Kurka, P.~R.}, \& \bibinfo{author}{Santos, A.~A.} (\bibinfo{year}{2023}).
+\newblock \bibinfo{title}{A fast simulation approach to assess draft gear loads for heavy haul trains during braking}.
+\newblock {\it \bibinfo{journal}{Mechanics Based Design of Structures and Machines}\/},  {\it \bibinfo{volume}{51}\/}, \bibinfo{pages}{1606--1625}. \DOIprefix\doi{10.1080/15397734.2021.1875233}.
+%Type = Inproceedings
+\bibitem[{Fujimoto et~al.(2018)Fujimoto, van Hoof \& Meger}]{fujimoto2018addressing}
+\bibinfo{author}{Fujimoto, S.}, \bibinfo{author}{van Hoof, H.}, \& \bibinfo{author}{Meger, D.} (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{Addressing function approximation error in actor-critic methods}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 35th International Conference on Machine Learning}\/} (pp. \bibinfo{pages}{1587--1596}).
+\newblock volume~\bibinfo{volume}{80} of {\it \bibinfo{series}{Proceedings of Machine Learning Research}\/}.
+%Type = Inproceedings
+\bibitem[{Haarnoja et~al.(2017)Haarnoja, Tang, Abbeel \& Levine}]{haarnoja2017reinforcement}
+\bibinfo{author}{Haarnoja, T.}, \bibinfo{author}{Tang, H.}, \bibinfo{author}{Abbeel, P.}, \& \bibinfo{author}{Levine, S.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{Reinforcement learning with deep energy-based policies}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 34th International Conference on Machine Learning}\/} (pp. \bibinfo{pages}{1352--1361}).
+\newblock volume~\bibinfo{volume}{70} of {\it \bibinfo{series}{Proceedings of Machine Learning Research}\/}.
+%Type = Inproceedings
+\bibitem[{Haarnoja et~al.(2018{\natexlab{a}})Haarnoja, Zhou, Abbeel \& Levine}]{haarnoja2018soft}
+\bibinfo{author}{Haarnoja, T.}, \bibinfo{author}{Zhou, A.}, \bibinfo{author}{Abbeel, P.}, \& \bibinfo{author}{Levine, S.} (\bibinfo{year}{2018}{\natexlab{a}}).
+\newblock \bibinfo{title}{Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 35th International Conference on Machine Learning}\/} (pp. \bibinfo{pages}{1861--1870}).
+\newblock volume~\bibinfo{volume}{80} of {\it \bibinfo{series}{Proceedings of Machine Learning Research}\/}.
+%Type = Article
+\bibitem[{Haarnoja et~al.(2018{\natexlab{b}})Haarnoja, Zhou, Hartikainen, Tucker, Ha, Tan, Kumar, Zhu, Gupta, Abbeel \& Levine}]{haarnoja2018algorithms}
+\bibinfo{author}{Haarnoja, T.}, \bibinfo{author}{Zhou, A.}, \bibinfo{author}{Hartikainen, K.}, \bibinfo{author}{Tucker, G.}, \bibinfo{author}{Ha, S.}, \bibinfo{author}{Tan, J.}, \bibinfo{author}{Kumar, V.}, \bibinfo{author}{Zhu, H.}, \bibinfo{author}{Gupta, A.}, \bibinfo{author}{Abbeel, P.}, \& \bibinfo{author}{Levine, S.} (\bibinfo{year}{2018}{\natexlab{b}}).
+\newblock \bibinfo{title}{Soft actor-critic algorithms and applications}.
+\newblock {\it \bibinfo{journal}{arXiv preprint arXiv:1812.05905}\/}, .
+%Type = Inproceedings
+\bibitem[{van Hasselt(2010)}]{vanhasselt2010double}
+\bibinfo{author}{van Hasselt, H.} (\bibinfo{year}{2010}).
+\newblock \bibinfo{title}{Double {Q}-learning}.
+\newblock In {\it \bibinfo{booktitle}{Advances in Neural Information Processing Systems 23}\/} (pp. \bibinfo{pages}{2613--2621}).
+%Type = Inproceedings
+\bibitem[{Hausknecht \& Stone(2016)}]{hausknecht2016deep}
+\bibinfo{author}{Hausknecht, M.}, \& \bibinfo{author}{Stone, P.} (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{Deep reinforcement learning in parameterized action space}.
+\newblock In {\it \bibinfo{booktitle}{International Conference on Learning Representations (ICLR)}\/}.
+%Type = Article
+\bibitem[{Howlett(2016)}]{howlett2016new}
+\bibinfo{author}{Howlett, P.} (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{A new look at the rate of change of energy consumption with respect to journey time on an optimal train journey}.
+\newblock {\it \bibinfo{journal}{Transportation Research Part B: Methodological}\/},  {\it \bibinfo{volume}{94}\/}, \bibinfo{pages}{387--408}. \DOIprefix\doi{10.1016/j.trb.2016.10.004}.
+%Type = Article
+\bibitem[{Huang et~al.(2025)Huang, Lai, Chen, Lin \& Yin}]{huang2025enhanced}
+\bibinfo{author}{Huang, Y.}, \bibinfo{author}{Lai, W.}, \bibinfo{author}{Chen, D.}, \bibinfo{author}{Lin, G.}, \& \bibinfo{author}{Yin, J.} (\bibinfo{year}{2025}).
+\newblock \bibinfo{title}{Enhanced intelligent train operation algorithms for metro train based on expert system and deep reinforcement learning}.
+\newblock {\it \bibinfo{journal}{PLoS One}\/},  {\it \bibinfo{volume}{20}\/}, \bibinfo{pages}{e0323478}.
+%Type = Inproceedings
+\bibitem[{Kingma \& Welling(2014)}]{kingma2014auto}
+\bibinfo{author}{Kingma, D.~P.}, \& \bibinfo{author}{Welling, M.} (\bibinfo{year}{2014}).
+\newblock \bibinfo{title}{Auto-encoding variational {B}ayes}.
+\newblock In {\it \bibinfo{booktitle}{International Conference on Learning Representations (ICLR)}\/}.
+%Type = Inproceedings
+\bibitem[{Kulkarni et~al.(2016)Kulkarni, Narasimhan, Saeedi \& Tenenbaum}]{kulkarni2016hierarchical}
+\bibinfo{author}{Kulkarni, T.~D.}, \bibinfo{author}{Narasimhan, K.~R.}, \bibinfo{author}{Saeedi, A.}, \& \bibinfo{author}{Tenenbaum, J.~B.} (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{Hierarchical deep reinforcement learning: Integrating temporal abstraction and intrinsic motivation}.
+\newblock In {\it \bibinfo{booktitle}{Advances in Neural Information Processing Systems 29}\/} (pp. \bibinfo{pages}{3675--3683}).
+%Type = Inproceedings
+\bibitem[{Lillicrap et~al.(2016)Lillicrap, Hunt, Pritzel, Heess, Erez, Tassa, Silver \& Wierstra}]{lillicrap2016continuous}
+\bibinfo{author}{Lillicrap, T.~P.}, \bibinfo{author}{Hunt, J.~J.}, \bibinfo{author}{Pritzel, A.}, \bibinfo{author}{Heess, N.}, \bibinfo{author}{Erez, T.}, \bibinfo{author}{Tassa, Y.}, \bibinfo{author}{Silver, D.}, \& \bibinfo{author}{Wierstra, D.} (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{Continuous control with deep reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{International Conference on Learning Representations (ICLR)}\/}.
+%Type = Article
+\bibitem[{Lin(1992)}]{lin1992self}
+\bibinfo{author}{Lin, L.-J.} (\bibinfo{year}{1992}).
+\newblock \bibinfo{title}{Self-improving reactive agents based on reinforcement learning, planning and teaching}.
+\newblock {\it \bibinfo{journal}{Machine Learning}\/},  {\it \bibinfo{volume}{8}\/}, \bibinfo{pages}{293--321}.
+%Type = Article
+\bibitem[{Lin et~al.(2017)Lin, Wang, Wang, Sun \& Feng}]{lin2017energy}
+\bibinfo{author}{Lin, X.}, \bibinfo{author}{Wang, Q.}, \bibinfo{author}{Wang, P.}, \bibinfo{author}{Sun, P.}, \& \bibinfo{author}{Feng, X.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{The energy-efficient operation problem of a freight train considering long-distance steep downhill sections}.
+\newblock {\it \bibinfo{journal}{Energies}\/},  {\it \bibinfo{volume}{10}\/}, \bibinfo{pages}{794}. \DOIprefix\doi{10.3390/en10060794}.
+%Type = Inproceedings
+\bibitem[{Masson et~al.(2016)Masson, Ranchod \& Konidaris}]{masson2016reinforcement}
+\bibinfo{author}{Masson, W.}, \bibinfo{author}{Ranchod, P.}, \& \bibinfo{author}{Konidaris, G.} (\bibinfo{year}{2016}).
+\newblock \bibinfo{title}{Reinforcement learning with parameterized actions}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 30th AAAI Conference on Artificial Intelligence}\/} (pp. \bibinfo{pages}{1934--1940}).
+%Type = Article
+\bibitem[{Mnih et~al.(2015)Mnih, Kavukcuoglu, Silver, Rusu, Veness, Bellemare, Graves, Riedmiller, Fidjeland, Ostrovski, Petersen, Beattie, Sadik, Antonoglou, King, Kumaran, Wierstra, Legg \& Hassabis}]{mnih2015human}
+\bibinfo{author}{Mnih, V.}, \bibinfo{author}{Kavukcuoglu, K.}, \bibinfo{author}{Silver, D.}, \bibinfo{author}{Rusu, A.~A.}, \bibinfo{author}{Veness, J.}, \bibinfo{author}{Bellemare, M.~G.}, \bibinfo{author}{Graves, A.}, \bibinfo{author}{Riedmiller, M.}, \bibinfo{author}{Fidjeland, A.~K.}, \bibinfo{author}{Ostrovski, G.}, \bibinfo{author}{Petersen, S.}, \bibinfo{author}{Beattie, C.}, \bibinfo{author}{Sadik, A.}, \bibinfo{author}{Antonoglou, I.}, \bibinfo{author}{King, H.}, \bibinfo{author}{Kumaran, D.}, \bibinfo{author}{Wierstra, D.}, \bibinfo{author}{Legg, S.}, \& \bibinfo{author}{Hassabis, D.} (\bibinfo{year}{2015}).
+\newblock \bibinfo{title}{Human-level control through deep reinforcement learning}.
+\newblock {\it \bibinfo{journal}{Nature}\/},  {\it \bibinfo{volume}{518}\/}, \bibinfo{pages}{529--533}.
+%Type = Inproceedings
+\bibitem[{Nachum et~al.(2018)Nachum, Gu, Lee \& Levine}]{nachum2018data}
+\bibinfo{author}{Nachum, O.}, \bibinfo{author}{Gu, S.}, \bibinfo{author}{Lee, H.}, \& \bibinfo{author}{Levine, S.} (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{Data-efficient hierarchical reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{Advances in Neural Information Processing Systems 31}\/}.
+%Type = Article
+\bibitem[{Oprea et~al.(2013)Oprea, Cruceanu \& Spiroiu}]{oprea2013alternative}
+\bibinfo{author}{Oprea, R.~A.}, \bibinfo{author}{Cruceanu, C.}, \& \bibinfo{author}{Spiroiu, M.~A.} (\bibinfo{year}{2013}).
+\newblock \bibinfo{title}{Alternative friction models for braking train dynamics}.
+\newblock {\it \bibinfo{journal}{Vehicle System Dynamics}\/},  {\it \bibinfo{volume}{51}\/}, \bibinfo{pages}{460--480}. \DOIprefix\doi{10.1080/00423114.2012.744459}.
+%Type = Inproceedings
+\bibitem[{Parr \& Russell(1998)}]{parr1998reinforcement}
+\bibinfo{author}{Parr, R.}, \& \bibinfo{author}{Russell, S.} (\bibinfo{year}{1998}).
+\newblock \bibinfo{title}{Reinforcement learning with hierarchies of machines}.
+\newblock In {\it \bibinfo{booktitle}{Advances in Neural Information Processing Systems 10}\/} (pp. \bibinfo{pages}{1043--1049}).
+%Type = Article
+\bibitem[{Pateria et~al.(2021)Pateria, Subagdja, Tan \& Quek}]{pateria2021hierarchical}
+\bibinfo{author}{Pateria, S.}, \bibinfo{author}{Subagdja, B.}, \bibinfo{author}{Tan, A.-h.}, \& \bibinfo{author}{Quek, C.} (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{Hierarchical reinforcement learning: A comprehensive survey}.
+\newblock {\it \bibinfo{journal}{ACM Computing Surveys}\/},  {\it \bibinfo{volume}{54}\/}, \bibinfo{pages}{1--35}.
+%Type = Article
+\bibitem[{Pugi et~al.(2013)Pugi, Malvezzi, Papini \& Vettori}]{pugi2013design}
+\bibinfo{author}{Pugi, L.}, \bibinfo{author}{Malvezzi, M.}, \bibinfo{author}{Papini, S.}, \& \bibinfo{author}{Vettori, G.} (\bibinfo{year}{2013}).
+\newblock \bibinfo{title}{Design and preliminary validation of a tool for the simulation of train braking performance}.
+\newblock {\it \bibinfo{journal}{Journal of Modern Transportation}\/},  {\it \bibinfo{volume}{21}\/}, \bibinfo{pages}{247--257}. \DOIprefix\doi{10.1007/s40534-013-0027-6}.
+%Type = Article
+\bibitem[{Shang et~al.(2021)Shang, Zhou \& Fujita}]{shang2021deep}
+\bibinfo{author}{Shang, M.}, \bibinfo{author}{Zhou, Y.}, \& \bibinfo{author}{Fujita, H.} (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{Deep reinforcement learning with reference system to handle constraints for energy-efficient train control}.
+\newblock {\it \bibinfo{journal}{Information Sciences}\/},  {\it \bibinfo{volume}{570}\/}, \bibinfo{pages}{708--721}.
+%Type = Book
+\bibitem[{Sutton \& Barto(2018)}]{Sutton2018Reinforcement}
+\bibinfo{author}{Sutton, R.~S.}, \& \bibinfo{author}{Barto, A.~G.} (\bibinfo{year}{2018}).
+\newblock {\it \bibinfo{title}{Reinforcement Learning: An Introduction}\/}.
+\newblock (\bibinfo{edition}{2nd} ed.).
+\newblock \bibinfo{publisher}{The MIT Press}.
+%Type = Article
+\bibitem[{Sutton et~al.(1999)Sutton, Precup \& Singh}]{sutton1999between}
+\bibinfo{author}{Sutton, R.~S.}, \bibinfo{author}{Precup, D.}, \& \bibinfo{author}{Singh, S.} (\bibinfo{year}{1999}).
+\newblock \bibinfo{title}{Between {MDPs} and semi-{MDPs}: A framework for temporal abstraction in reinforcement learning}.
+\newblock {\it \bibinfo{journal}{Artificial Intelligence}\/},  {\it \bibinfo{volume}{112}\/}, \bibinfo{pages}{181--211}.
+%Type = Article
+\bibitem[{Teodoro et~al.(2019)Teodoro, Ribeiro, Botari, Martins \& Santos}]{teodoro2019fast}
+\bibinfo{author}{Teodoro, {\'I}.~P.}, \bibinfo{author}{Ribeiro, D.~F.}, \bibinfo{author}{Botari, T.}, \bibinfo{author}{Martins, T.~S.}, \& \bibinfo{author}{Santos, A.~A.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{Fast simulation of railway pneumatic brake systems}.
+\newblock {\it \bibinfo{journal}{Proceedings of the Institution of Mechanical Engineers, Part F: Journal of Rail and Rapid Transit}\/},  {\it \bibinfo{volume}{233}\/}, \bibinfo{pages}{420--430}. \DOIprefix\doi{10.1177/0954409718796903}.
+%Type = Inproceedings
+\bibitem[{Vezhnevets et~al.(2017)Vezhnevets, Osindero, Schaul, Heess, Jaderberg, Silver \& Kavukcuoglu}]{vezhnevets2017feudal}
+\bibinfo{author}{Vezhnevets, A.~S.}, \bibinfo{author}{Osindero, S.}, \bibinfo{author}{Schaul, T.}, \bibinfo{author}{Heess, N.}, \bibinfo{author}{Jaderberg, M.}, \bibinfo{author}{Silver, D.}, \& \bibinfo{author}{Kavukcuoglu, K.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{{FeUdal} networks for hierarchical reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 34th International Conference on Machine Learning}\/} (pp. \bibinfo{pages}{3540--3549}).
+\newblock volume~\bibinfo{volume}{70} of {\it \bibinfo{series}{Proceedings of Machine Learning Research}\/}.
+%Type = Article
+\bibitem[{Wagner et~al.(2021)Wagner, Cole \& Spiryagin}]{wagner2021review}
+\bibinfo{author}{Wagner, S.}, \bibinfo{author}{Cole, C.}, \& \bibinfo{author}{Spiryagin, M.} (\bibinfo{year}{2021}).
+\newblock \bibinfo{title}{A review on design and testing methodologies of modern freight train draft gear system}.
+\newblock {\it \bibinfo{journal}{Railway Engineering Science}\/},  {\it \bibinfo{volume}{29}\/}, \bibinfo{pages}{127--151}. \DOIprefix\doi{10.1007/s40534-021-00237-y}.
+%Type = Article
+\bibitem[{Wang et~al.(2019)Wang, Li, Tang, Wang \& Xun}]{wang2019intelligent}
+\bibinfo{author}{Wang, X.}, \bibinfo{author}{Li, S.}, \bibinfo{author}{Tang, T.}, \bibinfo{author}{Wang, X.}, \& \bibinfo{author}{Xun, J.} (\bibinfo{year}{2019}).
+\newblock \bibinfo{title}{Intelligent operation of heavy haul train with data imbalance: A machine learning method}.
+\newblock {\it \bibinfo{journal}{Knowledge-Based Systems}\/},  {\it \bibinfo{volume}{163}\/}, \bibinfo{pages}{36--50}. \DOIprefix\doi{10.1016/j.knosys.2018.08.015}.
+%Type = Article
+\bibitem[{Wei et~al.(2022)Wei, Zhu, Wang, Chen, Lu, Sha \& Li}]{wei2022energy}
+\bibinfo{author}{Wei, G.}, \bibinfo{author}{Zhu, S.}, \bibinfo{author}{Wang, Y.}, \bibinfo{author}{Chen, W.}, \bibinfo{author}{Lu, S.}, \bibinfo{author}{Sha, S.}, \& \bibinfo{author}{Li, L.} (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Energy-efficient automatic train operation for high-speed railways: Considering discrete notches and neutral sections}.
+\newblock {\it \bibinfo{journal}{Transportation Research Part C: Emerging Technologies}\/},  {\it \bibinfo{volume}{145}\/}, \bibinfo{pages}{103884}.
+%Type = Article
+\bibitem[{Wei et~al.(2017)Wei, Hu, Wu, Zhao, Zhang \& Zhang}]{wei2017air}
+\bibinfo{author}{Wei, W.}, \bibinfo{author}{Hu, Y.}, \bibinfo{author}{Wu, Q.}, \bibinfo{author}{Zhao, X.}, \bibinfo{author}{Zhang, J.}, \& \bibinfo{author}{Zhang, Y.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{An air brake model for longitudinal train dynamics studies}.
+\newblock {\it \bibinfo{journal}{Vehicle System Dynamics}\/},  {\it \bibinfo{volume}{55}\/}, \bibinfo{pages}{517--533}. \DOIprefix\doi{10.1080/00423114.2016.1254261}.
+%Type = Article
+\bibitem[{Wu et~al.(2014)Wu, Cole, Luo \& Spiryagin}]{wu2014review}
+\bibinfo{author}{Wu, Q.}, \bibinfo{author}{Cole, C.}, \bibinfo{author}{Luo, S.}, \& \bibinfo{author}{Spiryagin, M.} (\bibinfo{year}{2014}).
+\newblock \bibinfo{title}{A review of dynamics modelling of friction draft gear}.
+\newblock {\it \bibinfo{journal}{Vehicle System Dynamics}\/},  {\it \bibinfo{volume}{52}\/}, \bibinfo{pages}{733--758}. \DOIprefix\doi{10.1080/00423114.2014.894199}.
+%Type = Article
+\bibitem[{Wu et~al.(2023)Wu, Cole, Spiryagin, Chang, Wei, Ursulyak, Shvets, Murtaza, Mirza, Zhelieznov, Mohammadi, Serajian, Schick, Berg, Sharma, Aboubakr, Sharma, Melzi, Gialleonardo, Bosso, Zampieri, Magelli, Ion, Routcliffe, Pudovikov, Menaker, Mo, Luo, Ghafourian, Serajian, Santos, Teodoro, Eckert, Pugi, Shabana \& Cantone}]{wu2023freight}
+\bibinfo{author}{Wu, Q.}, \bibinfo{author}{Cole, C.}, \bibinfo{author}{Spiryagin, M.}, \bibinfo{author}{Chang, C.}, \bibinfo{author}{Wei, W.}, \bibinfo{author}{Ursulyak, L.}, \bibinfo{author}{Shvets, A.}, \bibinfo{author}{Murtaza, M.~A.}, \bibinfo{author}{Mirza, I.~M.}, \bibinfo{author}{Zhelieznov, K.}, \bibinfo{author}{Mohammadi, S.}, \bibinfo{author}{Serajian, H.}, \bibinfo{author}{Schick, B.}, \bibinfo{author}{Berg, M.}, \bibinfo{author}{Sharma, R.~C.}, \bibinfo{author}{Aboubakr, A.}, \bibinfo{author}{Sharma, S.~K.}, \bibinfo{author}{Melzi, S.}, \bibinfo{author}{Gialleonardo, E.~D.}, \bibinfo{author}{Bosso, N.}, \bibinfo{author}{Zampieri, N.}, \bibinfo{author}{Magelli, M.}, \bibinfo{author}{Ion, C.~C.}, \bibinfo{author}{Routcliffe, I.}, \bibinfo{author}{Pudovikov, O.}, \bibinfo{author}{Menaker, G.}, \bibinfo{author}{Mo, J.}, \bibinfo{author}{Luo, S.}, \bibinfo{author}{Ghafourian, A.}, \bibinfo{author}{Serajian, R.}, \bibinfo{author}{Santos, A.~A.}, \bibinfo{author}{Teodoro, I.~P.}, \bibinfo{author}{Eckert, J.~J.}, \bibinfo{author}{Pugi, L.}, \bibinfo{author}{Shabana, A.}, \& \bibinfo{author}{Cantone, L.} (\bibinfo{year}{2023}).
+\newblock \bibinfo{title}{Freight train air brake models}.
+\newblock {\it \bibinfo{journal}{International Journal of Rail Transportation}\/},  {\it \bibinfo{volume}{11}\/}, \bibinfo{pages}{1--49}. \DOIprefix\doi{10.1080/23248378.2021.2006808}.
+%Type = Article
+\bibitem[{Wu et~al.(2018)Wu, Cole, Spiryagin \& McSweeney}]{wu2018parallel}
+\bibinfo{author}{Wu, Q.}, \bibinfo{author}{Cole, C.}, \bibinfo{author}{Spiryagin, M.}, \& \bibinfo{author}{McSweeney, T.} (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{Parallel multiobjective optimisations of draft gear designs}.
+\newblock {\it \bibinfo{journal}{Proceedings of the Institution of Mechanical Engineers, Part F: Journal of Rail and Rapid Transit}\/},  {\it \bibinfo{volume}{232}\/}, \bibinfo{pages}{744--758}. \DOIprefix\doi{10.1177/0954409717690981}.
+%Type = Article
+\bibitem[{Wu et~al.(2017)Wu, Luo, Qu \& Yang}]{wu2017comparisons}
+\bibinfo{author}{Wu, Q.}, \bibinfo{author}{Luo, S.}, \bibinfo{author}{Qu, T.}, \& \bibinfo{author}{Yang, X.} (\bibinfo{year}{2017}).
+\newblock \bibinfo{title}{Comparisons of draft gear damping mechanisms}.
+\newblock {\it \bibinfo{journal}{Vehicle System Dynamics}\/},  {\it \bibinfo{volume}{55}\/}, \bibinfo{pages}{501--516}. \DOIprefix\doi{10.1080/00423114.2016.1252049}.
+%Type = Article
+\bibitem[{Yadav \& Vyas(2023)}]{yadav2023influence}
+\bibinfo{author}{Yadav, O.~P.}, \& \bibinfo{author}{Vyas, N.~S.} (\bibinfo{year}{2023}).
+\newblock \bibinfo{title}{The influence of aar coupler features on estimation of in-train forces}.
+\newblock {\it \bibinfo{journal}{Railway Engineering Science}\/},  (pp. \bibinfo{pages}{1--19}). \DOIprefix\doi{10.1007/s40534-022-00297-8}.
+%Type = Article
+\bibitem[{Yi et~al.(2022)Yi, Zhang, Li, Duan, Jiang \& Liu}]{yi2022research}
+\bibinfo{author}{Yi, L.}, \bibinfo{author}{Zhang, D.}, \bibinfo{author}{Li, W.}, \bibinfo{author}{Duan, R.}, \bibinfo{author}{Jiang, P.}, \& \bibinfo{author}{Liu, B.} (\bibinfo{year}{2022}).
+\newblock \bibinfo{title}{Research on multi-objective optimization of freight train operation process based on improved bald eagle search algorithm}.
+\newblock {\it \bibinfo{journal}{Journal of Computers}\/},  {\it \bibinfo{volume}{33}\/}, \bibinfo{pages}{135--150}. \DOIprefix\doi{10.53106/199115992022103305012}.
+%Type = Article
+\bibitem[{Zhang \& Zhuan(2013)}]{zhang2013optimal}
+\bibinfo{author}{Zhang, L.}, \& \bibinfo{author}{Zhuan, X.} (\bibinfo{year}{2013}).
+\newblock \bibinfo{title}{Optimal operation of heavy-haul trains equipped with electronically controlled pneumatic brake systems using model predictive control methodology}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Control Systems Technology}\/},  {\it \bibinfo{volume}{22}\/}, \bibinfo{pages}{13--22}. \DOIprefix\doi{10.1109/TCST.2013.2238235}.
+%Type = Article
+\bibitem[{Zhou et~al.(2020)Zhou, Song, Xue, You \& Wu}]{zhou2020smart}
+\bibinfo{author}{Zhou, K.}, \bibinfo{author}{Song, S.}, \bibinfo{author}{Xue, A.}, \bibinfo{author}{You, K.}, \& \bibinfo{author}{Wu, H.} (\bibinfo{year}{2020}).
+\newblock \bibinfo{title}{Smart train operation algorithms based on expert knowledge and reinforcement learning}.
+\newblock {\it \bibinfo{journal}{IEEE Transactions on Systems, Man, and Cybernetics: Systems}\/},  {\it \bibinfo{volume}{52}\/}, \bibinfo{pages}{716--727}.
+%Type = Phdthesis
+\bibitem[{Ziebart(2010)}]{ziebart2010modeling}
+\bibinfo{author}{Ziebart, B.~D.} (\bibinfo{year}{2010}).
+\newblock {\it \bibinfo{title}{Modeling Purposeful Adaptive Behavior with the Principle of Maximum Causal Entropy}\/}.
+\newblock Ph.D. thesis Carnegie Mellon University.
+%Type = Inproceedings
+\bibitem[{Ziebart et~al.(2008)Ziebart, Maas, Bagnell \& Dey}]{ziebart2008maximum}
+\bibinfo{author}{Ziebart, B.~D.}, \bibinfo{author}{Maas, A.}, \bibinfo{author}{Bagnell, J.~A.}, \& \bibinfo{author}{Dey, A.~K.} (\bibinfo{year}{2008}).
+\newblock \bibinfo{title}{Maximum entropy inverse reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 23rd AAAI Conference on Artificial Intelligence}\/} (pp. \bibinfo{pages}{1433--1438}).
+
+\end{thebibliography}
