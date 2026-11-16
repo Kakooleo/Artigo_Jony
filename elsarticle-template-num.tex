@@ -652,131 +652,85 @@ where the soft value function is
     \label{eq:soft_value}
 \end{equation}
 
-SAC is derived from \emph{soft policy iteration}, which alternates between two steps. In policy evaluation, the soft Q-function of the current policy is computed by repeatedly applying Eq.~\eqref{eq:soft_bellman}. In policy improvement, the policy is updated toward the exponential of the soft Q-function, by minimizing the Kullback--Leibler (KL) divergence:
+The SAC training algorithm is based on the soft policy iteration algortihm. This algorithm alternates between the policy evaluation and policy improvement steps. In the first, the soft Q-function of the current policy is computed by repeatedly applying Eq.~\eqref{eq:soft_bellman}. In the second, the policy is updated by minimizing the Kullback-Leibler divergence:
 \begin{equation}
     \pi_{\text{new}} = \arg\min_{\pi' \in \Pi} \; D_{\mathrm{KL}}\left( \pi'(\cdot \mid s_t) \;\middle\|\; \frac{\exp\big(Q^{\pi_{\text{old}}}(s_t, \cdot)/\alpha\big)}{Z^{\pi_{\text{old}}}(s_t)} \right),
     \label{eq:policy_improvement}
 \end{equation}
-where $\Pi$ is the family of admissible policies (for example, Gaussian distributions) and $Z^{\pi_{\text{old}}}(s_t)$ is a normalization term. \citet{haarnoja2018soft} showed that, in the tabular case, repeating these two steps converges to the optimal policy within $\Pi$. For large or continuous state spaces, both steps are approximated with neural networks and stochastic gradient descent, which gives the practical SAC algorithm described below.
+where $\Pi$ is the family of admissible policies (for example, Gaussian distributions) and $Z^{\pi_{\text{old}}}(s_t)$ is a normalization term.
 
-SAC learns two soft Q-functions, $Q_{\theta_1}$ and $Q_{\theta_2}$, each represented by a neural network with parameters $\theta_i$. Using the minimum of the two estimates when computing targets reduces the overestimation bias common in value-based methods. This technique is known as clipped double Q-learning \citep{fujimoto2018addressing}, and it builds on the ideas of double Q-learning \citep{vanhasselt2010double}. Each critic is trained on transitions $(s_t, a_t, r_t, s_{t+1})$ sampled from a replay buffer $\mathcal{D}$ that stores past experience \citep{lin1992self,mnih2015human}, by minimizing the soft Bellman residual:
+\cite{haarnoja2018algorithms} showed that this procedure converges for a tabular setting. For continous domains these steps are approximated using neural networks. Consider, then, the parameterized soft Q-function $Q_\theta(s_t, a_t)$, and the policy $\pi_\phi(a_t \mid s_t)$, with parameters $\theta$, and $\phi$, respectively. The soft Q-function is trained to minimize the soft Bellman residual:
+\begin{equation}
+    J_Q(\theta) = \mathbb{E}_{\mathbf{s_t} \sim \mathcal{D}}\left[\frac{1}{2}\Big(Q_{\theta}(s_t, a_t) - y_t\Big)^2\right],
+    \label{eq:soft_bellman_residual}
+\end{equation} 
+where $\mathcal{D}$ is a replay buffer that stores past experiences, and $y_t$ is giving by:
+\begin{equation}
+    y_t = r(s_t, a_t) + \gamma \, \mathbb{E}_{s_{t+1} \sim p}\left[V_{\bar{\theta}}(s_{t+1})\right].
+    \label{eq:soft_bellman_target}
+\end{equation}
+Here $V_{\bar{\theta}}(s_{t+1})$ is the soft value function computed using a target network with parameters $\bar{\theta}$, which are updated slowly using $\bar{\theta}_j \leftarrow \tau_p \theta_j + (1 - \tau_p)\bar{\theta}_j$, with $\tau_p \ll 1$. This stabilizes the training \citep{mnih2015human}.
+
+In practice, it is common to use two soft Q-functions, $Q_{\theta_1}$ and $Q_{\theta_2}$, each represented by a neural network with parameters $\theta_i$. Using the minimum of the two estimates when computing targets reduces the overestimation bias common in value-based methods \citep{fujimoto2018addressing,vanhasselt2010double}. With two critics, the loss function for each is given by:
 \begin{equation}
     J_Q(\theta_i) = \mathbb{E}_{(s_t, a_t, r_t, s_{t+1}) \sim \mathcal{D}}\left[\frac{1}{2}\Big(Q_{\theta_i}(s_t, a_t) - y_t\Big)^2\right], \quad i = 1, 2,
     \label{eq:critic_loss}
 \end{equation}
-with the target
+with the target being:
 \begin{equation}
     y_t = r_t + \gamma \left( \min_{j=1,2} Q_{\bar{\theta}_j}(s_{t+1}, a_{t+1}) - \alpha \log \pi_\phi(a_{t+1} \mid s_{t+1}) \right), \quad a_{t+1} \sim \pi_\phi(\cdot \mid s_{t+1}).
     \label{eq:critic_target}
 \end{equation}
-Here $Q_{\bar{\theta}_j}$ are target networks, whose parameters slowly track the critic parameters through Polyak averaging, $\bar{\theta}_j \leftarrow \tau_p \theta_j + (1 - \tau_p)\bar{\theta}_j$, with $\tau_p \ll 1$. This stabilizes the targets during training \citep{mnih2015human,lillicrap2016continuous}.
 
-For continuous actions, the policy $\pi_\phi$ is a Gaussian distribution whose mean $\mu_\phi(s_t)$ and standard deviation $\sigma_\phi(s_t)$ are produced by a neural network with parameters $\phi$. Since physical actions are bounded, the Gaussian sample is passed through a hyperbolic tangent so that the action lies in $(-1, 1)$ \citep{haarnoja2018soft}. The action is written using the reparameterization trick \citep{kingma2014auto}:
+For continuous actions, the policy $\pi_\phi$ is a Gaussian distribution whose mean $\mu_\phi(s_t)$ and standard deviation $\sigma_\phi(s_t)$ are produced by a neural network. The policy parameters are updated by minimizing the expected KL divergence of Eq.~\eqref{eq:policy_improvement}:
 \begin{equation}
-    a_t = f_\phi(\xi_t; s_t) = \tanh\big(\mu_\phi(s_t) + \sigma_\phi(s_t) \odot \xi_t\big), \qquad \xi_t \sim \mathcal{N}(0, I).
+   J_\pi(\phi) = \mathbb{E}_{s_t \sim \mathcal{D}}\left[\mathbb{E}_{a_t \sim \pi_\phi}\left(\alpha \log \pi_\phi(a_t | s_t) - \min_{j=1,2} Q_{\theta_j}\big(s_t, a_t\big)\right)\right]
+   \label{eq:actor_loss}
+\end{equation}
+To minimize this loss, the gradient is computed using the reparameterization trick \citep{kingma2014auto}, which allows gradients to flow from the critic into the policy network. The action is written using the reparameterization trick as:
+\begin{equation}
+    a_t = f_\phi(\xi_t; s_t).
     \label{eq:reparam}
 \end{equation}
-Writing the action this way makes it a differentiable function of $\phi$, so gradients can flow from the critic into the policy network. The policy parameters are updated by minimizing the expected KL divergence of Eq.~\eqref{eq:policy_improvement}, which is equivalent to the loss
+Since physical actions are bounded, the Gaussian sample is passed through a hyperbolic tangent so that the action lies in $(-1, 1)$ \citep{haarnoja2018soft}, which gives:
 \begin{equation}
-    J_\pi(\phi) = \mathbb{E}_{s_t \sim \mathcal{D},\, \xi_t \sim \mathcal{N}}\left[\alpha \log \pi_\phi\big(f_\phi(\xi_t; s_t) \mid s_t\big) - \min_{j=1,2} Q_{\theta_j}\big(s_t, f_\phi(\xi_t; s_t)\big)\right].
-    \label{eq:actor_loss}
+    a_t  = f_\phi(\xi_t; s_t) = \tanh\big(\mu_\phi(s_t) + \sigma_\phi(s_t) \odot \xi_t\big), \qquad \xi_t \sim \mathcal{N}(0, I).
 \end{equation}
 Because of the $\tanh$ transformation, the log-probability in Eq.~\eqref{eq:actor_loss} has to include a change-of-variables correction,
 \begin{equation}
     \log \pi_\phi(a_t \mid s_t) = \log \mathcal{N}(u_t; \mu_\phi, \sigma_\phi) - \sum_i \log\big(1 - \tanh^2(u_{t,i})\big),
     \label{eq:tanh_correction}
 \end{equation}
-where $u_t$ is the Gaussian sample before squashing \citep{haarnoja2018soft}. The bounded action is then scaled linearly to the physical range of the command. In this work, that is the brake pipe pressure between 0 and 90~psi.
-
-The temperature $\alpha$ strongly affects performance, and its best value depends on the task and the reward scale. \citet{haarnoja2018algorithms} proposed adjusting it automatically by constraining the average entropy of the policy to stay above a target value $\bar{\mathcal{H}}$. This leads to the loss
-\begin{equation}
-    J(\alpha) = \mathbb{E}_{s_t \sim \mathcal{D},\, a_t \sim \pi_\phi}\left[-\alpha \log \pi_\phi(a_t \mid s_t) - \alpha \bar{\mathcal{H}}\right].
-    \label{eq:alpha_loss}
-\end{equation}
-When the policy's entropy falls below the target, $\alpha$ increases, encouraging exploration; when it is above the target, $\alpha$ decreases. For continuous actions, the heuristic $\bar{\mathcal{H}} = -\dim(\mathcal{A})$ is commonly used \citep{haarnoja2018algorithms}, which gives $\bar{\mathcal{H}} = -1$ for the single-dimensional pressure command considered here.
-
-Training alternates between collecting experience and updating the networks. At each environment step, an action is sampled from the current policy, the resulting transition is stored in $\mathcal{D}$, and a mini-batch is drawn from $\mathcal{D}$ to update the critics (Eq.~\eqref{eq:critic_loss}), the actor (Eq.~\eqref{eq:actor_loss}), the temperature (Eq.~\eqref{eq:alpha_loss}), and the target networks. Because the updates use data from the replay buffer rather than only from the current policy, SAC reuses experience efficiently. That matters here, since each episode requires simulating the full multibody train model.
-
-% Section 3.3 -- Discrete Soft Actor-Critic
-% Requires: \usepackage{amsmath,amssymb,booktabs} and \usepackage[round]{natbib} (or equivalent)
-% Cross-references labels defined in Section 3.2 (sec:sac, eq:soft_value, eq:critic_loss,
-% eq:critic_target, eq:reparam, eq:actor_loss, eq:alpha_loss).
+where $u_t$ is the Gaussian sample before squashing \citep{haarnoja2018soft}.
 
 \subsection{Soft Actor-Critic for Discrete Actions}
 \label{sec:discrete_sac}
 
-The SAC algorithm presented in Section~\ref{sec:sac} was formulated for continuous action spaces. Its policy update relies on the reparameterization trick of Eq.~\eqref{eq:reparam}, which requires the action to be a differentiable function of the policy parameters. This is not possible when the action is chosen from a finite set, as in the selection of a gear point or of the active subpolicy. \citet{christodoulou2019soft} proposed an adaptation of SAC to discrete action spaces that keeps the maximum entropy objective of Eq.~\eqref{eq:maxent_objective} and the overall actor-critic structure, but changes how the policy and the Q-functions are represented. This version, referred to here as discrete SAC, is used for the meta controller and for the throttle and dynamic braking subpolicies.
+The SAC algorithm presented in Section~\ref{sec:sac} was formulated for continuous action spaces. Its policy update relies on the reparameterization trick of Eq.~\eqref{eq:reparam}. \citet{christodoulou2019soft} proposed an adaptation of SAC to discrete action spaces that keeps the overall actor-critic structure, but changes how the policy and the Q-functions are represented and trained. 
 
-\subsubsection*{Policy and critic representation}
-
-Let the action space be a finite set $\mathcal{A} = \{a^{(1)}, \dots, a^{(|\mathcal{A}|)}\}$. Instead of producing the parameters of a Gaussian distribution, the policy network outputs one logit per action, which a softmax function turns into a probability vector:
+Let the action space be a finite set $\mathcal{A} = \{a_1, \dots, a_{|\mathcal{A}|}\}$. Instead of producing the parameters of a Gaussian distribution, the policy network outputs the direct probabilities of each action:
 \begin{equation}
-    \pi_\phi(s_t) = \operatorname{softmax}\big(z_\phi(s_t)\big) \in [0, 1]^{|\mathcal{A}|},
-    \qquad \sum_{k=1}^{|\mathcal{A}|} \pi_\phi\big(a^{(k)} \mid s_t\big) = 1,
+    \pi_\phi(s_t) = \operatorname{softmax}\big(z_\phi(s_t)\big) \in [0, 1]^{|\mathcal{A}|}
     \label{eq:discrete_policy}
 \end{equation}
-where $z_\phi(s_t) \in \mathbb{R}^{|\mathcal{A}|}$ is the vector of logits. Similarly, instead of taking the action as an input, each critic receives only the state and outputs the Q-value of every action at once, $Q_{\theta_i}(s_t) \in \mathbb{R}^{|\mathcal{A}|}$, in the same way as the Deep Q-Network \citep{mnih2015human}. Twin critics, target networks updated by Polyak averaging, and a replay buffer are kept exactly as in the continuous case \citep{christodoulou2019soft}.
+where $z_\phi(s_t) \in \mathbb{R}^{|\mathcal{A}|}$ is the vector of logits. Similarly, instead of taking the action as an input, each Q-function now receives only the state and outputs the Q-value of every action at once, $Q_{\theta_i}(s_t) \in \mathbb{R}^{|\mathcal{A}|}$.
 
-\subsubsection*{Exact expectations over actions}
-
-The main advantage of a finite action space is that expectations over the policy no longer need to be estimated by sampling: they can be computed exactly by summing over all actions, weighted by their probabilities. The soft state-value function of Eq.~\eqref{eq:soft_value} then becomes
+The main advantage of a finite action space is that expectations over the policy no longer need to be estimated by sampling: they can be computed exactly. The soft state-value function of Eq.~\eqref{eq:soft_value} then becomes
 \begin{equation}
     V(s_t) = \pi_\phi(s_t)^{\top} \Big[ Q(s_t) - \alpha \log \pi_\phi(s_t) \Big],
     \label{eq:discrete_value}
 \end{equation}
-where the logarithm is applied element-wise \citep{christodoulou2019soft}. Using Eq.~\eqref{eq:discrete_value}, the critic target of Eq.~\eqref{eq:critic_target} is rewritten as
+The critic target of Eq.~\eqref{eq:critic_target} is rewritten as
 \begin{equation}
     y_t = r_t + \gamma \, \pi_\phi(s_{t+1})^{\top} \Big[ \min_{j=1,2} Q_{\bar{\theta}_j}(s_{t+1}) - \alpha \log \pi_\phi(s_{t+1}) \Big],
     \label{eq:discrete_critic_target}
 \end{equation}
-where the minimum is taken element-wise over the two target critics. Each critic is trained by minimizing the same squared error of Eq.~\eqref{eq:critic_loss}, using the Q-value of the action actually taken, $Q_{\theta_i}(s_t)[a_t]$. Compared with the continuous case, the target no longer depends on a sampled next action, which reduces its variance.
-
-\subsubsection*{Policy update}
-
-Since the expectation over actions can be computed exactly, the policy loss of Eq.~\eqref{eq:actor_loss} no longer requires the reparameterization trick. It becomes
+Finally, the policy loss of Eq.~\eqref{eq:actor_loss} no longer requires the reparameterization trick. It becomes
 \begin{equation}
     J_\pi(\phi) = \mathbb{E}_{s_t \sim \mathcal{D}}\left[ \pi_\phi(s_t)^{\top} \Big( \alpha \log \pi_\phi(s_t) - \min_{j=1,2} Q_{\theta_j}(s_t) \Big) \right],
     \label{eq:discrete_actor_loss}
 \end{equation}
-which is differentiable with respect to $\phi$ through the action probabilities themselves \citep{christodoulou2019soft}. Minimizing Eq.~\eqref{eq:discrete_actor_loss} increases the probability of actions with high Q-values while the entropy term prevents the distribution from collapsing too quickly onto a single action.
-
-\subsubsection*{Temperature adjustment}
-
-The temperature is adjusted automatically as in Eq.~\eqref{eq:alpha_loss}, again replacing the sampled expectation by an exact one:
-\begin{equation}
-    J(\alpha) = \mathbb{E}_{s_t \sim \mathcal{D}}\left[ \pi_\phi(s_t)^{\top} \Big( -\alpha \log \pi_\phi(s_t) - \alpha \bar{\mathcal{H}} \Big) \right].
-    \label{eq:discrete_alpha_loss}
-\end{equation}
-The heuristic $\bar{\mathcal{H}} = -\dim(\mathcal{A})$ used for continuous actions does not apply here, since the entropy of a categorical distribution is always non-negative and is bounded above by $\log |\mathcal{A}|$, the entropy of the uniform distribution. \citet{christodoulou2019soft} therefore sets the target as a fraction of this maximum, $\bar{\mathcal{H}} = 0.98 \log |\mathcal{A}|$. Table~\ref{tab:discrete_agents} lists the size of the action space of each discrete agent in this work.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Action spaces of the agents trained with discrete SAC.}
-    \label{tab:discrete_agents}
-    \begin{tabular}{lcc}
-        \toprule
-        Agent & Actions & $|\mathcal{A}|$ \\
-        \midrule
-        Meta controller       & throttle, dynamic braking, pneumatic braking & 3 \\
-        Throttle subpolicy    & gear points 0 to 8                           & 9 \\
-        Dynamic braking subpolicy & gear points $-1$ to $-4$                 & 4 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\subsubsection*{Action selection}
-
-During training, actions are sampled from the categorical distribution $\pi_\phi(s_t)$, so that the agent keeps exploring. After training, the policy can either continue to sample actions or select the most probable one, $a_t = \arg\max_k \pi_\phi\big(a^{(k)} \mid s_t\big)$, which gives a deterministic controller.
-
-% Section 3.4 -- Hierarchical Reinforcement Learning
-% Requires: \usepackage{amsmath,amssymb} and \usepackage[round]{natbib} (or equivalent)
-% Cross-references labels from Sections 3.2-3.3 (sec:sac, sec:discrete_sac) and
-% expects \label{sec:architecture} on the section describing the proposed controller
-% and \label{sec:training} on the training methodology section.
-%
-% ASSUMPTION: the meta controller selects a subpolicy at EVERY time step.
-% If the selected subpolicy instead acts for several steps, replace the paragraph
-% marked [EVERY-STEP] with the commented alternative marked [MULTI-STEP] below it.
+which is differentiable with respect to $\phi$ through the action probabilities themselves \citep{christodoulou2019soft}. 
 
 \subsection{Hierarchical Reinforcement Learning}
 \label{sec:hrl}
@@ -830,7 +784,13 @@ In this work, the meta controller selects a mode at every time step. In terms of
 
 The details of the state, the reward, and the training scheme of each agent are given in Sections~\ref{sec:architecture} and~\ref{sec:training}.
 
+\section{Methodology} \label{sec:methodology}
+
+
+
 \subsection{Proposed Architecture} \label{sec:architecture}
+
+
 
 \subsection{State Space} \label{sec:state}
 
@@ -845,94 +805,58 @@ where $t$ is the time, $x$ is the position of the train along the track, $V$ is 
 
 \subsection{Action Space} \label{sec:action}
 
+\begin{comment}
+    \begin{table}[htbp]
+        \centering
+        \caption{Action spaces of the agents trained with discrete SAC.}
+        \label{tab:discrete_agents}
+        \begin{tabular}{lcc}
+            \toprule
+            Agent & Actions & $|\mathcal{A}|$ \\
+            \midrule
+            Meta controller       & throttle, dynamic braking, pneumatic braking & 3 \\
+            Throttle subpolicy    & gear points 0 to 8                           & 9 \\
+            Dynamic braking subpolicy & gear points $-1$ to $-4$                 & 4 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+    
+    During training, actions are sampled from the categorical distribution $\pi_\phi(s_t)$, so that the agent keeps exploring. After training, the policy can either continue to sample actions or select the most probable one, $a_t = \arg\max_k \pi_\phi\big(a^{(k)} \mid s_t\big)$, which gives a deterministic controller.
+    
+\end{comment}
+
 \subsection{Reward Function} \label{sec:reward}
 
-\section{Methodology}
+\begin{comment}
+    
+    \section{Methodology}
+    
+    % TALVEZ MOVER ESSA PARTE PARA A INTRODUÇÂO
+    
+    In the next sections, we will present the approach taken to design an efficient and safe train control system using a Hybrid Soft Actor-Critic (SAC) model described in \cite{delalleau2019discretecontinuousactionrepresentation}. The goal is to optimize energy consumption and travel time while maintaining safety. The model dynamically adjusts the locomotive's throttle and brake pressure to achieve this balance. 
+    
+    \subsection{Model Structure}
+    
+    In reinforcement learning, an agent learns the optimal control strategies through continuous interaction with its environment, aiming to maximize the cumulative reward over time. At each time step $t$, the agent selects an action $a_t \in \mathcal{A}$, transitioning the system from the current state $s_t$ to a new state $s_{t+1}$, with $s_t, s_{t+1} \in \mathcal{S}$. This transition yields an immediate reward $r_t$, which informs the agent about the quality of its chosen action within the context of its long-term goal.
+    
+    The actions chosen by the agent must adhere to the constraints defined by the problem domain, such as physical limitations, safety requirements, or system-specific regulations—an example being a restriction on the maximum allowable velocity. These constraints ensure the agent's behavior remains realistic and applicable to real-world scenarios.
+    
+    Figure (INSERT FIGURE HERE) illustrates the general structure of the reinforcement learning model, depicting the cyclic process of decision-making, state transition, and reward evaluation. This diagram provides an overview of how the agent interacts with the environment, continually refining its policy to achieve optimal performance.
+    
+\end{comment}
 
-% TALVEZ MOVER ESSA PARTE PARA A INTRODUÇÂO
-
-In the next sections, we will present the approach taken to design an efficient and safe train control system using a Hybrid Soft Actor-Critic (SAC) model described in \cite{delalleau2019discretecontinuousactionrepresentation}. The goal is to optimize energy consumption and travel time while maintaining safety. The model dynamically adjusts the locomotive's throttle and brake pressure to achieve this balance. 
-
-\subsection{Model Structure}
-
-In reinforcement learning, an agent learns the optimal control strategies through continuous interaction with its environment, aiming to maximize the cumulative reward over time. At each time step $t$, the agent selects an action $a_t \in \mathcal{A}$, transitioning the system from the current state $s_t$ to a new state $s_{t+1}$, with $s_t, s_{t+1} \in \mathcal{S}$. This transition yields an immediate reward $r_t$, which informs the agent about the quality of its chosen action within the context of its long-term goal.
-
-The actions chosen by the agent must adhere to the constraints defined by the problem domain, such as physical limitations, safety requirements, or system-specific regulations—an example being a restriction on the maximum allowable velocity. These constraints ensure the agent's behavior remains realistic and applicable to real-world scenarios.
-
-Figure (INSERT FIGURE HERE) illustrates the general structure of the reinforcement learning model, depicting the cyclic process of decision-making, state transition, and reward evaluation. This diagram provides an overview of how the agent interacts with the environment, continually refining its policy to achieve optimal performance.
-
-
-
-
-\subsection{Model Architecture}
-
-
-Optimization equations:
-\begin{equation}
-    \overline{Q_{target}} = r_t + \gamma \mathbb{E}_{s_{t+1}} 
-    \left(\sum_{a_d} \pi\left(a_d|s_{t+1}\right)\min \left(Q_1, Q_2\right) - 
-    \alpha_d \log \left(\pi \left(a_d|s_{t+1}\right)\right) - 
-    \alpha_c \sum_ {a_d} \pi\left(a_d|s_{t+1}\right) \log \left(\pi\left(a_c|s_{t+1},a_d\right)\right)\right)
-\end{equation}
-
-\begin{equation}
-    J_{\theta}^{i} = \frac{1}{N} \sum_{i=1}^{N} \left(Q_{j}^{i} - \overline{Q_{target}^i}\right)^2
-\end{equation}
-for $j = 1,2$. The combined loss will be the mean of individual Q-network losses:
-\begin{equation}
-    J_{\theta}^C = \frac{J_{\theta}^{1} + J_{\theta}^{2}}{2}
-\end{equation}
-
-The policy loss was divided into two parts, the discrete and the continuous, that were computed as:
-\begin{equation}
-    J_{\pi}^{d} = \mathbb{E}_{s_t} \left(\sum_{a_d} \pi\left(a_d|s_{t}\right) \cdot \left[\alpha_d  \log \left(\pi\left(a_d|s_{t}\right)\right) - \min\left(Q_1,Q_2\right)\right]\right)
-\end{equation}
-
-\begin{equation}
-    J_{\pi}^{c} = \mathbb{E}_{s_t} \left(\sum_{a_d} \pi\left(a_d|s_{t}\right) \cdot \left[ \alpha_c \sum_{a_d} \pi\left(a_d|s_{t}\right) \log \left(\pi\left(a_d|s_{t}\right)\right) - \min\left(Q_1,Q_2\right)\right]\right)
-\end{equation}
-
-The final loss is computed as the sum of the continuous and discrete parts:
-
-\begin{equation}
-    J_{pi}^{C} = J_{\pi}^{d} + J_{\pi}^{c}
-\end{equation}
-
-The loss for the parameters $\alpha_c$ and $\alpha_d$ is computed as follows:
-
-\begin{equation}
-    J_{\alpha_d} = \mathbb{E} \left( - \log \left(\alpha_d\right) \sum_{a_d} \pi\left(a_d|s_t\right) \cdot \left[\log \left(\pi \left(a_d | s_t\right)\right) + \alpha_{target}^{d}\right]\right)
-\end{equation}
-
-\begin{equation}
-    J_{\alpha_c} = \mathbb{E} \left( - \log \left(\alpha_c\right) \sum_{a_d} \pi\left(a_d|s_t\right) \cdot \left[\sum_{a_d} \pi\left(a_d|s_t\right) \log \left(\pi \left(a_c | s_t, a_d\right)\right) + \alpha_{target}^{c}\right]\right)
-\end{equation}
-
-The two target networks were updated using:
-\begin{equation}
-    \overline{\theta_{t+1}^{j}} = \tau \theta_{t}^{j} + \left(1-\tau\right)\overline{\theta_{t}^{j}}
-\end{equation}
-
-for $j=1,2$
-
-\newpage
-
-\section{Results } \label{sec5}
-
-
-
-
-
-
-
-
-\newpage
-
-\section{Conclusion}
-\label{sec6}
-
-
-
+    \newpage
+    
+    \section{Results} \label{sec5}
+    
+    
+    \newpage
+    
+    \section{Conclusion}
+    \label{sec6}
+    
+    
+    
 
 \section*{Declaration of Competing Interest}
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
