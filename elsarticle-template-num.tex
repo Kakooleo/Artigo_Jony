@@ -35,6 +35,10 @@
 
 \usepackage{multirow}
 \usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit}
+\usetikzlibrary{arrows.meta}
 \definecolor{mycolor}{RGB}{224, 241, 246}
 
 \usetikzlibrary{shapes.geometric, arrows}
@@ -786,13 +790,191 @@ The details of the state, the reward, and the training scheme of each agent are 
 
 \section{Methodology} \label{sec:methodology}
 
-
+The goal of this work is to develop a machine learning system capable of driving a freight train safely and efficiently, that is, the model must respect safety margins, for example the train speed must remain below the speed limit, including on downhill sections, while also traveling as fast as these limits allow. To address this, the driving task is divided into two subdecisions. In the first, a meta controller selects which of the three different operating modes, namely traction, dynamic braking, or pneumatic braking, of the locomotive should be used. In the second, a specialized subpolicy model decides the intensity of the corresponding command. In Section~\ref{sec:architecture} this hierarchical architecture is presented, as well as the action space of each agent, and how they interact with the enviroment. Subsection~\ref{sec:state} defines the variables of the state observed by the agents. Subsection~\ref{sec:reward} presents the reward function. Finally, Subsection~\ref{sec:training} describes the neural network architectures and the training procedure.
 
 \subsection{Proposed Architecture} \label{sec:architecture}
 
+The proposed controller is organized in two levels. At the top level, a meta controller decides which subpolicy will be used. At the lower level, the chosen subpolicy decides the intensity of the corresponding command. Figure~\ref{fig:architecture} shows the overall structure and its interaction with the multibody model of the train. 
 
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        font=\small,
+        >={Stealth[length=2.2mm]},
+        block/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, inner sep=3pt},
+        agent/.style={block, fill=blue!8, minimum width=28mm},
+        sub/.style={block, fill=orange!10, minimum width=25mm, minimum height=13mm},
+        env/.style={block, fill=gray!12, minimum width=28mm, minimum height=11mm},
+        lbl/.style={font=\footnotesize, fill=white, inner sep=1.5pt}
+    ]
+        % Meta controller
+        \node[agent] (meta) {Meta controller\\[-1pt]\footnotesize discrete SAC};
+
+        % Subpolicies
+        \node[sub, below=13mm of meta] (db)  {Dynamic braking\\[-1pt]\footnotesize discrete SAC\\[-1pt]\footnotesize $u_t \in \{-1,\dots,-4\}$};
+        \node[sub, left=4mm of db]     (thr) {Throttle\\[-1pt]\footnotesize discrete SAC\\[-1pt]\footnotesize $u_t \in \{0,\dots,8\}$};
+        \node[sub, right=4mm of db]    (pb)  {Pneumatic braking\\[-1pt]\footnotesize SAC\\[-1pt]\footnotesize $u_t \in [0, 90]$~psi};
+
+        % Group box for subpolicies
+        \node[draw, dashed, rounded corners=3pt, inner sep=3pt, fit=(thr)(db)(pb)] (subs) {};
+
+        % Mapping and environment
+        \node[block, fill=green!8, below=11mm of db, minimum width=28mm] (map)
+            {Command mapping $g_{m_t}$\\[-1pt]\footnotesize Eq.~\eqref{eq:mode_mapping}};
+        \node[env, below=8mm of map] (env) {Multibody train model\\[-1pt]\footnotesize integration over $\Delta t_c$};
+
+        % Mode selection arrows
+        \coordinate (bus) at ($(meta.south)+(0,-5mm)$);
+        \draw (meta.south) -- (bus);
+        \draw[->] (bus) -| (thr.north);
+        \draw[->] (bus) -| (pb.north);
+        \draw[->] (bus) -- (db.north);
+        \node[font=\footnotesize, anchor=west] at ($(meta.south)+(0.5mm,-2.2mm)$) {$m_t$};
+
+        % Subpolicy outputs to mapping
+        \draw[->] (subs.south -| thr.south) |- (map.west);
+        \draw[->] (subs.south -| db.south) -- node[lbl] {$u_t$} (map.north);
+        \draw[->] (subs.south -| pb.south) |- (map.east);
+
+        % Mapping to environment
+        \draw[->] (map.south) -- node[lbl, right=1mm, fill=none] {$(p_t,\, p_{f,t})$} (env.north);
+
+        % State feedback
+        \coordinate (fbx) at ($(subs.west)+(-5mm,0)$);
+        \draw[->] (env.west) -- node[lbl, above] {$s_{t+1}$} (env.west -| fbx)
+            -- (fbx |- meta.west) -- node[lbl, above] {$s_t$} (meta.west);
+    \end{tikzpicture}
+    \caption{Hierarchical control architecture. At each control step, the meta controller selects the operating mode $m_t$ from the state $s_t$, the selected subpolicy chooses the command $u_t$, and the mapping $g_{m_t}$ converts it into the gear point $p_t$ and the brake pipe pressure $p_{f,t}$ applied to the multibody model. All agents observe the same state.}
+    \label{fig:architecture}
+\end{figure}
+
+The meta controller is a discrete SAC model that, given the state $s_t$, selects the mode of operation $m_t$ of the locomotive. The three modes can be:
+\begin{equation}
+    m_t \in \mathcal{M} = \{\text{thr}, \text{db}, \text{pb}\},
+    \label{eq:modes}
+\end{equation}
+where thr, db, and pb denote throttle, dynamic braking, and pneumatic braking, respectively. Each subpolicy, then, chooses a command $u_t$ within its own action space $\mathcal{U}_m$. All subpolicies receive the same state $s_t$ as the meta controller, but only the one selected by the meta controller is active at each time step.
+
+The throttle subpolicy selects one of the eight gear points of the locomotive corresponding to traction, plus the idle gear point:
+\begin{equation}
+    \mathcal{U}_{\text{thr}} = \{0, 1, \dots, 8\},
+\end{equation}
+where 0 corresponds to idle and 8 to maximum traction. In the throttle mode, the brake pipe pressure is kept at 90 psi, that is, the air brakes are fully released.
+
+The dynamic braking subpolicy selects one of the four gear points corresponding to dynamic braking:
+\begin{equation}
+    \mathcal{U}_{\text{db}} = \{-1, -2, -3, -4\},
+\end{equation}
+in which the traction motors operate as generators and produce a retarding force on the locomotive. As in the throttle mode, the brake pipe pressure command is kept at 90 psi.
+
+The pneumatic braking subpolicy selects the brake pipe pressure command, a continuous variable in the range
+\begin{equation}
+    \mathcal{U}_{\text{pb}} = [0, 90]~\text{psi},
+\end{equation}
+where 0 corresponds to maximum pneumatic braking and 90 psi to no braking. In this mode, the gear point of the locomotive is fixed at $-4$, so dynamic braking remains engaged while the air brakes act along the train. 
+
+This architecture ensures that traction is never applied together with the pneumatic braking. It also lets each subpolicy work in a small, homogeneous action space, either discrete or continuous, instead of a single agent having to learn the full hybrid space of gear points and pressures.
+
+Table~\ref{tab:agents} summarizes the four agents.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{llll}
+        \toprule
+        Agent & Algorithm & Action & Range \\
+        \midrule
+        Meta controller   & discrete SAC & mode $m_t$          & $\{\text{thr}, \text{db}, \text{pb}\}$ \\
+        Throttle          & discrete SAC & gear point          & $\{0, \dots, 8\}$ \\
+        Dynamic braking   & discrete SAC & gear point          & $\{-1, \dots, -4\}$ \\
+        Pneumatic braking & SAC          & brake pipe pressure & $[0, 90]$~psi \\
+        \bottomrule
+    \end{tabular}
+    \caption{Agents of the hierarchical controller.}
+    \label{tab:agents}
+\end{table}
 
 \subsection{State Space} \label{sec:state}
+
+All the four agents of the controller observe the same state vector $s_t \in \mathbb{R}^{14}$. The state is defined as
+\begin{equation}
+    \begin{split}
+        s_t = \big[\, & t,\; x,\; v,\; p,\; p_f,\; a,\; h(x),\; \kappa(x),\; \delta^{+}(x),\; \delta^{-}(x),\\
+        & h(x + \Delta x),\; \kappa(x + \Delta x),\; \delta^{+}(x + \Delta x),\; \delta^{-}(x + \Delta x) \,\big],
+    \end{split}
+    \label{eq:state}
+\end{equation}
+where all quantities are taken at time step $t$ and $\Delta x = 150$~m is the look-ahead distance. All of the state components are normalized before feeding them to the agents. Table~\ref{tab:state} lists the variables divided into four groups, which are discussed below.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        Group & Symbol & Description \\
+        \midrule
+        \multirow{4}{*}{Train motion}
+        & $t$ & elapsed time \\
+        & $x$ & position along the route \\
+        & $v$ & velocity \\
+        & $a$ & acceleration \\
+        \midrule
+        \multirow{2}{*}{Actions}
+        & $p$   & gear point \\
+        & $p_f$ & brake pipe pressure \\
+        \midrule
+        \multirow{4}{*}{Track at $x$}
+        & $h(x)$          & altitude relative to the highest point \\
+        & $\kappa(x)$     & curvature \\
+        & $\delta^{+}(x)$ & uphill indicator \\
+        & $\delta^{-}(x)$ & downhill indicator \\
+        \midrule
+        \multirow{4}{*}{Track at $x + \Delta x$}
+        & $h(x + \Delta x)$          & altitude relative to the highest point \\
+        & $\kappa(x + \Delta x)$     & curvature \\
+        & $\delta^{+}(x + \Delta x)$ & uphill indicator \\
+        & $\delta^{-}(x + \Delta x)$ & downhill indicator \\
+        \bottomrule
+    \end{tabular}
+    \caption{Variables of the state vector.}
+    \label{tab:state}
+\end{table}
+
+The first group contains variables related to the motion of the train, which are measured at the leading locomotive. The time $t$ is the elapsed time since the beginning of the episode normalized by the expected duration of the trip $T_{MAX}$, that is,
+\begin{equation}
+    t = \frac{T}{T_{MAX}}
+\end{equation}
+
+
+The position $x$ and the velocity $v$ are the main variables of the driving task: the position determines the track conditions and speed limits the train is subject to, and the velocity is the quantity that must be kept below the speed limit minus the safety margin. The acceleration $a$ summarizes the net longitudinal force acting on the train, which results from traction or braking, running resistance, and the gravitational and curving resistances of the track. It therefore tells the agent how the velocity is about to change, which is especially useful because the effect of a braking command is not immediate.
+
+The gear point $p$ and the brake pipe pressure $p_f$ are the inputs currently applied to the locomotive, that is, those selected at the previous control step through Eq.~\eqref{eq:mode_mapping}. Their inclusion is motivated by the dynamics of the braking systems. Changes in brake pipe pressure propagate along the train with a delay, and the brake cylinders take time to fill and release, so a command keeps affecting the motion of the train for several control steps after it is applied. Informing the agents of the current commands allows them to account for these delayed effects and to choose commands consistent with the operating state of the locomotive.
+
+The altitude $h$ is measured relative to the highest point of the route, so that it indicates the potential energy of the train with respect to that point. Since a single value of altitude does not reveal whether the track is rising or falling, the binary indicators $\delta^{+}$ and $\delta^{-}$ identify the uphill and downhill sections:
+\begin{equation}
+    \delta^{+}(x) =
+    \begin{cases}
+        1, & i(x) > 0, \\
+        0, & \text{otherwise},
+    \end{cases}
+    \qquad
+    \delta^{-}(x) =
+    \begin{cases}
+        1, & i(x) < 0, \\
+        0, & \text{otherwise},
+    \end{cases}
+    \label{eq:slope_indicators}
+\end{equation}
+where $i(x) = \mathrm{d}h/\mathrm{d}x$ is the gradient of the track at position $x$. On level sections, both indicators are zero. [TODO: confirm how the indicators are computed, e.g.\ from the gradient or from a section table, and whether a minimum gradient threshold is used.] The gradient determines the gravitational force along the track, which, on downhill sections, accelerates the train and requires braking to keep the velocity within the limit. The curvature $\kappa$ accounts for the additional resistance in curves.
+
+The same four track variables are evaluated at the position $x + \Delta x$, 100~m ahead of the train. This look-ahead information allows the agents to anticipate changes in the track rather than only react to them. For example, the start of a downhill section can be detected before it is reached, so that dynamic or pneumatic braking can be applied in advance. This is important for a heavy freight train, whose large inertia and delayed brake response mean that corrective actions take effect only after the train has travelled a significant distance.
+
+The multibody model has many more internal variables than those included in $s_t$, such as the velocities of the individual wagons, the coupler forces, and the brake cylinder pressures along the train. Strictly, the agents observe only part of the system state, and the problem is partially observable \citep{kaelbling1998planning}. As is common in RL applications to physical systems, the vector $s_t$ is treated here as the state of an MDP. It was designed to contain the variables that most influence the future motion of the train, and the inclusion of the acceleration and of the current commands partially compensates for the unobserved dynamics of the braking systems.
+
+The variables of Eq.~\eqref{eq:state} have very different units and orders of magnitude, from the binary indicators to the position, which reaches [TODO: route length]. Since neural networks train more reliably when their inputs have similar scales, each continuous variable $z$ is normalized before being given to the agents as
+\begin{equation}
+    \tilde{z} = \frac{z - z_{\min}}{z_{\max} - z_{\min}},
+    \label{eq:normalization}
+\end{equation}
+where $z_{\min}$ and $z_{\max}$ are the lower and upper bounds of the variable over the route [TODO: confirm the normalization used and give the bounds, e.g.\ in Table~\ref{tab:state}]. The binary indicators are used without normalization.
 
 \begin{align}
     s_t = (t, x, V, p, BP, ACC, A, A_L, C, C_L, I, I_L, D, D_L)
@@ -801,28 +983,6 @@ where $t$ is the time, $x$ is the position of the train along the track, $V$ is 
 
 \begin{comment}
     Entao por alguma razao o idiota aqui colocou algumas variaveis redundantes (increasing/decreasing). O ideal seria substituir por uma unica variavel G = {-1, 0, 1} que indica se estamos subindo ou descendo. Da para reutilizar os pesos ja treinados e so alterar a entrada do agente. Da para retreinar usando os pesos ja existentes e so alterando a entrada do agente com as variaveis novas. s_t = (t_{\text{rem}},\, x,\, V,\, p,\, BP,\, ACC,\, G,\, G_L,\, C,\, C_L)
-\end{comment}
-
-\subsection{Action Space} \label{sec:action}
-
-\begin{comment}
-    \begin{table}[htbp]
-        \centering
-        \caption{Action spaces of the agents trained with discrete SAC.}
-        \label{tab:discrete_agents}
-        \begin{tabular}{lcc}
-            \toprule
-            Agent & Actions & $|\mathcal{A}|$ \\
-            \midrule
-            Meta controller       & throttle, dynamic braking, pneumatic braking & 3 \\
-            Throttle subpolicy    & gear points 0 to 8                           & 9 \\
-            Dynamic braking subpolicy & gear points $-1$ to $-4$                 & 4 \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
-    
-    During training, actions are sampled from the categorical distribution $\pi_\phi(s_t)$, so that the agent keeps exploring. After training, the policy can either continue to sample actions or select the most probable one, $a_t = \arg\max_k \pi_\phi\big(a^{(k)} \mid s_t\big)$, which gives a deterministic controller.
-    
 \end{comment}
 
 \subsection{Reward Function} \label{sec:reward}
@@ -845,15 +1005,28 @@ where $t$ is the time, $x$ is the position of the train along the track, $V$ is 
     
 \end{comment}
 
-    \newpage
+\subsection{Network Architechture and Training} \label{sec:training}
+
+The controller interacts with the multibody model of Section~\ref{sec:multibody} at a fixed control interval $\Delta t_c$ [TODO: value]. The commands are held constant during each interval, while the model integrates the equations of motion of the train with an internal time step $\Delta t_i \leq \Delta t_c$ [TODO: integration step and integrator]. Each control step $t \to t+1$ consists of:
+\begin{enumerate}
+    \item observing the state $s_t$ (Section~\ref{sec:state});
+    \item selecting the operating mode $m_t \sim \pi_M(\cdot \mid s_t)$ with the meta controller;
+    \item selecting the command $u_t \sim \pi_{m_t}(\cdot \mid s_t)$ with the corresponding subpolicy;
+    \item converting $u_t$ into $(p_t, p_{f,t})$ through Eq.~\eqref{eq:mode_mapping};
+    \item integrating the multibody model over $\Delta t_c$ with these inputs, which yields the next state $s_{t+1}$;
+    \item computing the reward $r_t$ (Section~\ref{sec:reward}).
+\end{enumerate}
+The meta controller selects a mode at every control step. In terms of the options framework (Section~\ref{sec:hrl}), each subpolicy therefore behaves as an option that terminates after a single step, and the problem seen by every agent remains an ordinary MDP. The transition function of this MDP is not written explicitly: it is defined by the numerical integration of the multibody model. All agents are trained with model-free algorithms, so they learn only from the transitions produced by the simulator and do not require access to the equations of the model. How the transitions are distributed among the agents during training is described in Section~\ref{sec:training}.
+
+
+\newpage
     
-    \section{Results} \label{sec5}
+\section{Results} \label{sec5}
     
     
-    \newpage
+\newpage
     
-    \section{Conclusion}
-    \label{sec6}
+\section{Conclusion} \label{sec6}
     
     
     

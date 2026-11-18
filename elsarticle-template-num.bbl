@@ -1,4 +1,4 @@
-\begin{thebibliography}{51}
+\begin{thebibliography}{53}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\href}[2]{#2}
@@ -124,6 +124,11 @@
 \bibinfo{author}{Huang, Y.}, \bibinfo{author}{Lai, W.}, \bibinfo{author}{Chen, D.}, \bibinfo{author}{Lin, G.}, \& \bibinfo{author}{Yin, J.} (\bibinfo{year}{2025}).
 \newblock \bibinfo{title}{Enhanced intelligent train operation algorithms for metro train based on expert system and deep reinforcement learning}.
 \newblock {\it \bibinfo{journal}{PLoS One}\/},  {\it \bibinfo{volume}{20}\/}, \bibinfo{pages}{e0323478}.
+%Type = Article
+\bibitem[{Kaelbling et~al.(1998)Kaelbling, Littman \& Cassandra}]{kaelbling1998planning}
+\bibinfo{author}{Kaelbling, L.~P.}, \bibinfo{author}{Littman, M.~L.}, \& \bibinfo{author}{Cassandra, A.~R.} (\bibinfo{year}{1998}).
+\newblock \bibinfo{title}{Planning and acting in partially observable stochastic domains}.
+\newblock {\it \bibinfo{journal}{Artificial Intelligence}\/},  {\it \bibinfo{volume}{101}\/}, \bibinfo{pages}{99--134}.
 %Type = Inproceedings
 \bibitem[{Kingma \& Welling(2014)}]{kingma2014auto}
 \bibinfo{author}{Kingma, D.~P.}, \& \bibinfo{author}{Welling, M.} (\bibinfo{year}{2014}).
@@ -159,6 +164,12 @@
 \bibinfo{author}{Oprea, R.~A.}, \bibinfo{author}{Cruceanu, C.}, \& \bibinfo{author}{Spiroiu, M.~A.} (\bibinfo{year}{2013}).
 \newblock \bibinfo{title}{Alternative friction models for braking train dynamics}.
 \newblock {\it \bibinfo{journal}{Vehicle System Dynamics}\/},  {\it \bibinfo{volume}{51}\/}, \bibinfo{pages}{460--480}. \DOIprefix\doi{10.1080/00423114.2012.744459}.
+%Type = Inproceedings
+\bibitem[{Pardo et~al.(2018)Pardo, Tavakoli, Levdik \& Kormushev}]{pardo2018time}
+\bibinfo{author}{Pardo, F.}, \bibinfo{author}{Tavakoli, A.}, \bibinfo{author}{Levdik, V.}, \& \bibinfo{author}{Kormushev, P.} (\bibinfo{year}{2018}).
+\newblock \bibinfo{title}{Time limits in reinforcement learning}.
+\newblock In {\it \bibinfo{booktitle}{Proceedings of the 35th International Conference on Machine Learning}\/} (pp. \bibinfo{pages}{4045--4054}).
+\newblock volume~\bibinfo{volume}{80} of {\it \bibinfo{series}{Proceedings of Machine Learning Research}\/}.
 %Type = Inproceedings
 \bibitem[{Parr \& Russell(1998)}]{parr1998reinforcement}
 \bibinfo{author}{Parr, R.}, \& \bibinfo{author}{Russell, S.} (\bibinfo{year}{1998}).
