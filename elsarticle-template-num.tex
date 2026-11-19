@@ -938,11 +938,7 @@ where all quantities are taken at time step $t$ and $\Delta x = 150$~m is the lo
     \label{tab:state}
 \end{table}
 
-The first group contains variables related to the motion of the train, which are measured at the leading locomotive. The time $t$ is the elapsed time since the beginning of the episode normalized by the expected duration of the trip $T_{MAX}$, that is,
-\begin{equation}
-    t = \frac{T}{T_{MAX}}
-\end{equation}
-
+The first group contains variables related to the motion of the train, which are measured at the leading locomotive. The time $t = T/T_{E}$ is the elapsed time since the beginning of the episode normalized by the expected duration of the trip $T_{E}$. $T_{E}$ is not a hard limit, meaning that $t$ can be bigger than 1 if the train takes longer than expected to reach the end of the route. The position $x$ is the distance along the track from the start of the route, normalized by the total length of the route $L$, that is, $x = \frac{X}{L}$. The variable $v= V/V_{\max}$ is the velocity of the train normalized by the speed limit along the route $V_{\max}$. Similarly to $T_{E}$, $V_{\max}$ is not a hard limit, and $v$ can be bigger than 1. Finally, the acceleration $a$ is the longitudinal acceleration of the train, normalized by a reference value $A_{\text{ref}}$. 
 
 The position $x$ and the velocity $v$ are the main variables of the driving task: the position determines the track conditions and speed limits the train is subject to, and the velocity is the quantity that must be kept below the speed limit minus the safety margin. The acceleration $a$ summarizes the net longitudinal force acting on the train, which results from traction or braking, running resistance, and the gravitational and curving resistances of the track. It therefore tells the agent how the velocity is about to change, which is especially useful because the effect of a braking command is not immediate.
 
